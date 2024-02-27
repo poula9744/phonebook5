@@ -43,7 +43,7 @@ public class PhoneController {
 		PhonebookDao phonebookDao = new PhonebookDao();
 
 		// dao.personInsert(vo)
-		// phonebookDao.personInsert(personVo);
+		phonebookDao.personInsert(personVo);
 
 		// 리스트로 리다이렉트
 		return "redirect:/phone/list";
@@ -86,17 +86,57 @@ public class PhoneController {
 
 		return "/WEB-INF/views/list.jsp";
 	}
-	
-	@RequestMapping(value="/phone/delete", method= {RequestMethod.GET, RequestMethod.POST})
-	public String delete(@RequestParam(value = "no") int no) {
+
+	@RequestMapping(value = "/phone/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	public String delete(@RequestParam(value = "no") int personId) {
 		System.out.println("PhonebookController.delete()");
 
 		// db사용
 		PhonebookDao phonebookDao = new PhonebookDao();
 
 		// 삭제
-		phonebookDao.personDelete(no);
+		phonebookDao.personDelete(personId);
 
+		// 리스트로 리다이렉트
+		return "/WEB-INF/views/list.jsp";
+	}
+
+	@RequestMapping(value = "/phone/mform", method = { RequestMethod.GET, RequestMethod.POST })
+	public String modifyForm(@RequestParam(value = "no") int personId, Model model) {
+		System.out.println("PhonebookController.modifyForm()");
+
+		// dao를 메모리에 올린다
+		PhonebookDao phonebookDao = new PhonebookDao();
+
+		// dao.personSelectOne(personId)
+		PersonVo personVo = phonebookDao.personSelectOne(personId);
+		System.out.println(personVo);
+		
+		model.addAttribute("personVo", personVo);
+		
+		return "/WEB-INF/views/modifyForm.jsp"; // ==포워드
+	}
+
+	@RequestMapping(value = "/phone/modify", method = { RequestMethod.GET, RequestMethod.POST })
+	public String modify(@RequestParam(value = "no") int personId, @RequestParam(value = "name") String name,
+			@RequestParam(value = "hp") String hp, @RequestParam(value = "company") String company) {
+
+		// 확인
+		System.out.println("PhonebookController.modify()");
+
+		// vo로 묶기
+		PersonVo personVo = new PersonVo(personId, name, hp, company);
+
+		System.out.println(personVo);
+
+		// db사용
+		PhonebookDao phonebookDao = new PhonebookDao();
+
+		// 삭제
+		phonebookDao.personModify(personVo);
+
+		// 리스트로 리다이렉트
 		return "redirect:/phone/list";
 	}
+
 }

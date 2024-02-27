@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,30 +17,29 @@
 	아래 항목을 기입하고 "수정" 버튼을 클릭하세요
 </p>
 
-<form action="/phonebook5/pbc" method="get">
+<form action="/phonebook5/phone/modify" method="get">
+	<input type="hidden" name="no" value="${param.no}">
 	<div>
 		<label>이름(name)</label>
-		<input type="text" name="name" value="">
+		<input type="text" name="name" value="${personVo.name}">
 	</div>
 	
 	<div>
 		<label>핸드폰(hp)</label>
-		<input type="text" name="hp" value="">
+		<input type="text" name="hp" value="${personVo.hp}">
 	</div>
 	
 	<div>
 		<label>회사(company)</label>
-		<input type="text" name="company" value="">
+		<input type="text" name="company" value="${personVo.company}">
 	</div>
-	
-	<input type="text" name="action" value="modify"><br>
-	<input type="text" name="no" value=""><br>
+
 	<button type="submit">수정</button>
 	
 </form>
 
 <br><br>
-<a href="/phonebook5/pbc?action=list">리스트페이지로 이동</a>
+<a href="/phonebook5/phone/list">리스트페이지로 이동</a>
 
 </body>
 </html>
