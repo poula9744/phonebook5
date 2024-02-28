@@ -18,7 +18,7 @@
 </p>
 
 <form action="/phonebook5/phone/modify" method="get">
-	<input type="hidden" name="no" value="${param.no}">
+	<input type="text" name="personId" value="${personVo.personId}">
 	<div>
 		<label>이름(name)</label>
 		<input type="text" name="name" value="${personVo.name}">
