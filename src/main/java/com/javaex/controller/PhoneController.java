@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.javaex.dao.PhonebookDao;
 import com.javaex.service.PhonebookService;
 import com.javaex.vo.PersonVo;
 
@@ -25,24 +25,11 @@ public class PhoneController {
 	// 메소드 - g/s
 	// 메소드 - 일반
 
-	//수정폼
-	@RequestMapping(value = "/phone/mform", method = { RequestMethod.GET, RequestMethod.POST })
-	public String modifyForm(@RequestParam(value = "no") int personId, Model model) {
-		System.out.println("PhonebookController.modifyForm()");
-
-		// PhonebookService phonebookService = new PhonebookService();
-		PersonVo personVo = phonebookService.exeModifyForm(personId);
-
-		model.addAttribute("personVo", personVo);
-
-		return "modifyForm"; // ==포워드
-	}
-
-	// 등록
+	// 등록1 --> exeWrite(vo) --> personInsert(Vo)
 	// http://localhost:8080/phonebook5/phone/write?name=황일영&hp=010&company=02
-	@RequestMapping(value = "/phone/write2", method = { RequestMethod.GET, RequestMethod.POST })
-	public String write2(@ModelAttribute PersonVo personVo) {
-		System.out.println("PhonebookController.write2()");
+	@RequestMapping(value = "/phone/write", method = { RequestMethod.GET, RequestMethod.POST })
+	public String write(@ModelAttribute PersonVo personVo) {
+		System.out.println("PhonebookController.write()");
 
 		System.out.println(personVo.toString());
 
@@ -50,6 +37,23 @@ public class PhoneController {
 		// 서비스의 메소드 사용
 		// PhonebookService phonebookService = new PhonebookService(); --> 필드에 올려서 필요없음
 		phonebookService.exeWrite(personVo);
+
+		// 리스트로 리다이렉트
+		return "redirect:/phone/list";
+	}
+
+	// 등록2 --> exeWrite(Vo) -->
+	// http://localhost:8080/phonebook5/phone/write?name=황일영&hp=010&company=02
+	@RequestMapping(value = "/phone/write2", method = { RequestMethod.GET, RequestMethod.POST })
+	public String write2(@RequestParam(value = "name") String name, @RequestParam(value = "hp") String hp,
+			@RequestParam(value = "company") String company) {
+		System.out.println("PhonebookController.write2()");
+
+		System.out.println(name);
+		System.out.println(hp);
+		System.out.println(company);
+
+		phonebookService.exeWrite2(name, hp, company);
 
 		// 리스트로 리다이렉트
 		return "redirect:/phone/list";
@@ -81,30 +85,7 @@ public class PhoneController {
 		return "writeForm"; // ==포워드
 	}
 
-	// 등록
-	// http://localhost:8080/phonebook5/phone/write?name=황일영&hp=010&company=02
-	@RequestMapping(value = "/phone/write", method = { RequestMethod.GET, RequestMethod.POST })
-	public String write(@RequestParam(value = "name") String name, @RequestParam(value = "hp") String hp,
-			@RequestParam(value = "company") String company) {
-		System.out.println("PhonebookController.write()");
-
-		System.out.println(name);
-		System.out.println(hp);
-		System.out.println(company);
-
-		// vo 묶는다
-		PersonVo personVo = new PersonVo(name, hp, company);
-
-		// dao를 메모리에 올린다
-		PhonebookDao phonebookDao = new PhonebookDao();
-
-		// dao.personInsert(vo)
-		phonebookDao.personInsert(personVo);
-
-		// 리스트로 리다이렉트
-		return "redirect:/phone/list";
-	}
-
+	// 삭제
 	@RequestMapping(value = "/phone/delete", method = { RequestMethod.GET, RequestMethod.POST })
 	public String delete(@RequestParam(value = "no") int personId) {
 		System.out.println("PhonebookController.delete()");
@@ -121,6 +102,33 @@ public class PhoneController {
 		return "redirect:/phone/list";
 	}
 
+	// 수정폼
+	@RequestMapping(value = "/phone/mform", method = { RequestMethod.GET, RequestMethod.POST })
+	public String modifyForm(@RequestParam(value = "no") int personId, Model model) {
+		System.out.println("PhonebookController.modifyForm()");
+
+		// PhonebookService phonebookService = new PhonebookService();
+		PersonVo personVo = phonebookService.exeModifyForm(personId);
+
+		model.addAttribute("personVo", personVo);
+
+		return "modifyForm"; // ==포워드
+	}
+
+	// 수정폼2
+	@RequestMapping(value = "/phone/mform2", method = { RequestMethod.GET, RequestMethod.POST })
+	public String modifyForm2(@RequestParam(value = "no") int personId, Model model) {
+		System.out.println("PhonebookController.modifyForm2()");
+		System.out.println(personId);
+		
+		Map<String, Object> pMap = phonebookService.exeModifyForm2(personId);
+		System.out.println(pMap);
+		model.addAttribute("pMap", pMap);
+		
+		return "modifyForm2";
+	}
+
+	// 수정
 	@RequestMapping(value = "/phone/modify", method = { RequestMethod.GET, RequestMethod.POST })
 	public String modify(@ModelAttribute PersonVo personVo) {
 
